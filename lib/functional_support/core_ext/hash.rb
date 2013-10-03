@@ -1,9 +1,9 @@
 class Hash
   # Like standard merge, except it ignores blank? values
   def initializing_merge(hash)
-    self.class.new.tap do |new_hash|
-      each do |key, value|
-        new_hash[key] = hash[key].blank? ? value : hash[key]
+    self.clone.tap do |cloned_hash|
+      hash.each do |key, value|
+        cloned_hash[key] = hash[key] if hash[key].present?
       end
     end
   end
