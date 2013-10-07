@@ -1,4 +1,10 @@
 class Array
+
+  def present_unshift(element=nil)
+    unshift element if element.present?
+    self
+  end
+
   def uniq_merge(&block)
     lambda do |&merge_together|
       inject({}) do |hash, element|
