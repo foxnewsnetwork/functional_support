@@ -1,4 +1,9 @@
 class Hash
+  class HashProc < Proc
+    def to(key)
+      call key
+    end
+  end
   # Like standard merge, except it ignores blank? values
   def initializing_merge(hash)
     self.clone.tap do |cloned_hash|
@@ -30,6 +35,18 @@ class Hash
       hash[key] = self[key] if self[key].present?
       hash
     end
+  end
+
+  def alter_key_from!(from_key)
+    HashProc.new do |to_key|
+      new_value = self[from_key].delete
+      self[to_key] = new_value if new_value.present?
+      self
+    end
+  end
+
+  def alter_key_from(from_key)
+    self.clone.alter_key_from! from_key
   end
 
 end
