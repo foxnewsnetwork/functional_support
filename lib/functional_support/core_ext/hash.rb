@@ -8,6 +8,23 @@ class Hash
     end
   end
 
+  # accesses a key, and maps over that key unless blank
+  def access_map(key, &block)
+    clone.access_map! key, &block
+  end
+
+  def access_map!(*keys, &block)
+    tap do |hash|
+      keys.each do |key|
+        if hash[key].present?
+          hash[key] = yield if 0 == block.arity
+          hash[key] = yield hash[key] if 1 == block.arity
+          hash[key] = yield key, hash[key] if 2 == block.arity
+        end
+      end
+    end
+  end
+
   def permit(*keys)
     keys.reduce(self.class.new) do |hash, key|
       hash[key] = self[key] if self[key].present?
