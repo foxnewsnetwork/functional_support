@@ -39,7 +39,7 @@ class Hash
 
   def alter_key_from!(from_key)
     HashProc.new do |to_key|
-      new_value = self[from_key].delete
+      new_value = self.delete from_key
       self[to_key] = new_value if new_value.present?
       self
     end
