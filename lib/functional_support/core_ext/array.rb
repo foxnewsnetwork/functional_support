@@ -1,5 +1,9 @@
 class Array
 
+  def tail
+    self[1..-1]
+  end
+
   def present_unshift(element=nil)
     unshift element if element.present?
     self

@@ -1,4 +1,5 @@
 class Hash
+  class EnforcedKeyMissing < StandardError; end
   class HashProc < Proc
     def to(key)
       call key
@@ -30,10 +31,30 @@ class Hash
     end
   end
 
+  def enforce!(*keys)
+    keys.reduce(self.class.new) do |hash, key|
+      raise EnforcedKeyMissing.new("#{key} is blank") if self[key].blank? 
+      hash[key] = self[key]
+      hash
+    end
+  end
+
   def permit(*keys)
     keys.reduce(self.class.new) do |hash, key|
       hash[key] = self[key] if self[key].present?
       hash
+    end
+  end
+
+  def key_map(&block)
+    clone.key_map!(&block)
+  end
+
+  def key_map!(&block)
+    tap do |hash|
+      hash.keys.each do |key|
+        hash[yield(key)] = hash.delete key if hash.has_key? key
+      end
     end
   end
 
