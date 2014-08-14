@@ -4,6 +4,10 @@ class Array
     self[1..-1]
   end
 
+  def head
+    self.take self.count - 1 unless self.count == 0
+  end
+
   def present_unshift(element=nil)
     unshift element if element.present?
     self
