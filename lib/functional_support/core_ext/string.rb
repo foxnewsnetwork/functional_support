@@ -16,7 +16,7 @@ class String
     if self[0] == diet[0]
       self[1..-1].consume diet[1..-1]
     else
-      throw "Mismatched diet error #{diet}"
+      throw "Mismatched diet error #{diet} does not match #{self}"
     end
   end
 end
