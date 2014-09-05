@@ -8,6 +8,34 @@ class Array
     self.take self.count - 1 unless self.count == 0
   end
 
+  # same as reduce, except the reduction function can have arity > 2
+  # with the second, third, etc. arguments being the lookahead
+  def reduce_with_lookahead(*parameters, &reducer)
+    case parameters.length
+    when 0
+      in_repeated_groups_of(reducer.arity - 1).reduce do |acc, arr|
+        reducer.call acc, *arr
+      end
+    when 1
+      init = parameters.first
+      in_repeated_groups_of(reducer.arity - 1).reduce(init) do |acc, arr|
+        reducer.call acc, *arr
+      end
+    else
+      raise LocalJumpError, "no block given"
+    end
+  end
+  alias_method :inject_with_lookahead, :reduce_with_lookahead
+
+  # Suppose n = 3, this takes something like [1,2,3,4,5] 
+  # and splits it into something like the following:
+  # [[1,2,3], [2,3,4], [3,4,5]]
+  def in_repeated_groups_of(n=1)
+    return [self] if length == n
+    return shift(nil).in_repeated_groups_of(n) if length < n
+    [take(n)] + tail.in_repeated_groups_of(n)
+  end
+
   def present_unshift(element=nil)
     unshift element if element.present?
     self
