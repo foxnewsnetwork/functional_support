@@ -17,6 +17,7 @@ class Hash
   def values_around(symbol)
     self[symbol] || self[symbol.to_s]
   end
+
   # accesses a key, and maps over that key unless blank
   def access_map(key, &block)
     clone.access_map! key, &block
