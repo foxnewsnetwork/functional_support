@@ -1,4 +1,13 @@
 class Array
+  class ProductWithEmptyArray < StandardError
+  end
+  # Returns the Cartesian product of two arrays
+  def product(xs)
+    raise(ProductWithEmptyArray, "can't product #{self} with #{xs}") if count == 0 || xs.count == 0
+    return xs.map { |x| [first, x] } if count == 1
+    thing = xs.map { |x| [first, x] }
+    thing + tail.product(xs)
+  end
 
   def tail
     self[1..-1]
