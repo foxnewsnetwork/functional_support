@@ -45,7 +45,7 @@ class Hash
 
   def permit(*keys)
     keys.reduce(self.class.new) do |hash, key|
-      hash[key] = self[key] if self[key].present?
+      hash[key] = self[key] if self.has_key?(key)
       hash
     end
   end
